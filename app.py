@@ -15,7 +15,7 @@ from flask_login import current_user
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'your_secret_key'  # Required for session management
+app.secret_key = 'your_secret_key'
 
 # Initialize the SQLAlchemy instance
 db.init_app(app)
@@ -99,8 +99,8 @@ def synthesize_speech(text, lang, voice_id=None, rate=1.0, pitch=1.0):
     try:
         # Initialize TTS engine
         engine = pyttsx3.init()
-        engine.setProperty('rate', int(200 * rate))  # Adjust speech rate
-        engine.setProperty('pitch', pitch)  # Note: pyttsx3 may not directly support pitch adjustment
+        engine.setProperty('rate', int(200 * rate))
+        engine.setProperty('pitch', pitch)
 
         if voice_id:
             engine.setProperty('voice', voice_id)
