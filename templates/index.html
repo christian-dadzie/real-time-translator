@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Translation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+        --button-bg-light: #ffffff;
+        --button-bg-dark: ;
+        --button-border-light: #333333;
+        --button-border-dark: #ffffff;
+        --button-text-light: #333333;
+        --button-text-dark: #ffffff;
+        --button-hover-bg-light: #333333;
+        --button-hover-bg-dark: #ffffff;
+        --button-hover-text-light: #ffffff;
+        --button-hover-text-dark: #333333;
+    }
+
+    [data-theme='light'] .btn,
+    [data-theme='light'] .btn-secondary,
+    [data-theme='light'] .btn-primary,
+    [data-theme='light'] .btn-warning,
+    [data-theme='light'] .btn-danger,
+    [data-theme='light'] .btn-success {
+        background-color: var(--button-bg-light);
+        color: var(--button-text-light);
+        border: 1px solid var(--button-border-light);
+    }
+
+    [data-theme='light'] .btn:hover,
+    [data-theme='light'] .btn-secondary:hover,
+    [data-theme='light'] .btn-primary:hover,
+    [data-theme='light'] .btn-warning:hover,
+    [data-theme='light'] .btn-danger:hover,
+    [data-theme='light'] .btn-success:hover {
+        background-color: var(--button-hover-bg-light);
+        color: var(--button-hover-text-light);
+    }
+
+    [data-theme='dark'] .btn,
+    [data-theme='dark'] .btn-secondary,
+    [data-theme='dark'] .btn-primary,
+    [data-theme='dark'] .btn-warning,
+    [data-theme='dark'] .btn-danger,
+    [data-theme='dark'] .btn-success {
+        background-color: var(--button-bg-dark);
+        color: var(--button-text-dark);
+        border: 1px solid var(--button-border-dark);
+    }
+
+    [data-theme='dark'] .btn:hover,
+    [data-theme='dark'] .btn-secondary:hover,
+    [data-theme='dark'] .btn-primary:hover,
+    [data-theme='dark'] .btn-warning:hover,
+    [data-theme='dark'] .btn-danger:hover,
+    [data-theme='dark'] .btn-success:hover {
+        background-color: var(--button-hover-bg-dark);
+        color: var(--button-hover-text-dark);
+    }
+
+    /* Style for a tags that have button style */
+    [data-theme='light'] .btn-like,
+    [data-theme='dark'] .btn-like {
+        display: inline-block;
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.25rem;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        background-color: inherit;
+        border: 1px solid;
+        text-decoration: none;
+    }
+
+    [data-theme='light'] .btn-like {
+        background-color: var(--button-bg-light);
+        color: var(--button-text-light);
+        border-color: var(--button-border-light);
+    }
+
+    [data-theme='light'] .btn-like:hover {
+        background-color: var(--button-hover-bg-light);
+        color: var(--button-hover-text-light);
+    }
+
+    [data-theme='dark'] .btn-like {
+        background-color: var(--button-bg-dark);
+        color: var(--button-text-dark);
+        border-color: var(--button-border-dark);
+    }
+
+    [data-theme='dark'] .btn-like:hover {
+        background-color: var(--button-hover-bg-dark);
+        color: var(--button-hover-text-dark);
+    }
+    :root {
+        --bg-light: #ffffff;
+        --bg-dark: #1e1e1e;
+        --text-light: #333333;
+        --text-dark: #ffffff;
+    }
+
+    /* Light mode styles */
+    [data-theme='light'] {
+        background-color: var(--bg-light);
+        color: var(--text-light);
+    }
+
+    /* Dark mode styles */
+    [data-theme='dark'] {
+        background-color: var(--bg-dark);
+        color: var(--text-dark);
+    }
+
+    /* Ensure all elements inside the page inherit the theme colors */
+    [data-theme='light'] body,
+    [data-theme='dark'] body,
+    [data-theme='light'] .container,
+    [data-theme='dark'] .container,
+    [data-theme='light'] .content,
+    [data-theme='dark'] .content {
+        background-color: inherit;
+        color: inherit;
+    }
+    /* Light mode input styles */
+    [data-theme='light'] input,
+    [data-theme='light'] textarea,
+    [data-theme='light'] select {
+        background-color: #ffffff;
+        color: #333333;
+        border: 1px solid #cccccc;
+    }
+
+    /* Dark mode input styles */
+    [data-theme='dark'] input,
+    [data-theme='dark'] textarea,
+    [data-theme='dark'] select {
+        background-color: #333333;
+        color: #ffffff;
+        border: 1px solid #555555;
+    }
+
+    /* Placeholder text styling for both modes */
+    input::placeholder,
+    textarea::placeholder {
+        color: #999999; /* Default placeholder color */
+    }
+
+    [data-theme='dark'] input::placeholder,
+    [data-theme='dark'] textarea::placeholder {
+        color: #bbbbbb; /* Lighter placeholder color in dark mode */
+    }
+    /* Light mode read-only textarea styles */
+    [data-theme='light'] textarea[readonly] {
+        background-color: #f5f5f5; /* Slightly off-white to indicate read-only */
+        color: #333333;
+        border: 1px solid #cccccc;
+    }
+
+    /* Dark mode read-only textarea styles */
+    [data-theme='dark'] textarea[readonly] {
+        background-color: #444444; /* Darker gray for dark mode */
+        color: #cccccc; /* Lighter text color */
+        border: 1px solid #555555;
+    }
+    #loading-spinner {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+    #voice-feedback {
+        color: var(--text-color);
+        font-size: 16px;
+        margin-top: 10px;
+        font-weight: bold;
+        }
+    /* body {
+        background-color: var(--background-color);
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--heading-color);
+    }
+
+    .form-control {
+        background-color: var(--textarea-bg);
+        color: var(--textarea-text);
+        border: 1px solid var(--form-border);
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+    }
+
+    .btn-primary {
+        background-color: var(--button-bg);
+        color: var(--button-text);
+        border: none;
+        transition: background-color 0.3s;
+    }
+
+    .form-control[readonly] {
+        background-color: var(--textarea-bg);
+        color: var(--textarea-text);
+        border: 1px solid var(--text-color);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--button-hover-bg);
+    }
+
+    .btn-primary:focus, .btn-primary:active {
+        background-color: var(--button-focus-bg);
+    }
+
+    .error-message {
+        color: var(--error-color);
+    }
+
+    .success-message {
+        color: var(--success-color);
+    }
+    html {
+    transition: background-color 0.3s, color 0.3s;
+    }
+
+    body, .form-control, .btn-primary {
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+    button, a, input, textarea {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+    }
+
+    button:focus, a:focus, input:focus, textarea:focus {
+        outline: 2px solid #1a73e8;
+        outline-offset: 2px;
+    }
+
+   
+    }
+    .logout .btn {
+        background-color: #dc3545;
+        color: white;
+        padding: 10px 20px;
+        margin: auto;
+        float: right;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .logout .btn:hover {
+        background-color: #c82333;
+    } */
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme');
+
+            if (currentTheme) {
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                toggleButton.textContent = currentTheme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+            }
+
+            toggleButton.addEventListener('click', function() {
+                let theme = document.documentElement.getAttribute('data-theme');
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    localStorage.setItem('theme', 'light');
+                    toggleButton.textContent = 'Toggle Dark Mode';
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    toggleButton.textContent = 'Toggle Light Mode';
+                }
+            });
+        });
+        // Function to handle form submission
+        async function submitForm(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const response = await fetch('/api/submit', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                alert('Form submitted successfully!');
+            } else {
+                alert('Error submitting form. Please try again.');
+            }
+        }
+
+        // Attach the submit handler to the form
+        document.getElementById('myForm').addEventListener('submit', submitForm)
+
+    </script>
+    <script>
+        $(document).ready(function() {
+            const maxLength = 500;
+            const $inputText = $('#input_text');
+            const $charCount = $('#char-count');
+
+            function updateCharCount() {
+                const currentLength = $inputText.val().length;
+                const remaining = maxLength - currentLength;
+                $charCount.text(`${remaining} characters remaining`);
+            }
+
+            $inputText.on('input', updateCharCount);
+
+            // Initial update
+            updateCharCount();
+        });
+
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Real-Time Translation</h1>
+              <a href="{{ url_for('auth.logout') }}" class="btn-like btn-danger">
+                <i class="fa fa-power-off "></i>
+                Logout
+            </a>
+          </div>
+        
+        <div class="logout">
+            
+        </div>
+        <button id="theme-toggle" class="btn btn-secondary mb-4">Toggle Dark Mode</button>
+        <form id="translation-form">
+            <div class="form-group">
+                <label for="src_lang">Source Language:</label>
+                <select id="src_lang" name="src_lang" class="form-control">
+                    <option value="auto">Auto Detect</option>
+                    {% for lang_name in language_map %}
+                        <option value="{{ lang_name }}">{{ lang_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dest_lang">Destination Language:</label>
+                <select id="dest_lang" name="dest_lang" class="form-control">
+                    {% for lang_name in language_map %}
+                        <option value="{{ lang_name }}">{{ lang_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="input_text">Text to Translate:</label>
+                <textarea id="input_text" name="input_text" class="form-control" maxlength="500"></textarea>
+                <small id="char-count" class="form-text text-muted">500 characters remaining</small>
+                <button type="button" id="voice-input-btn" class="btn btn-primary">
+                    <i class="fa fa-microphone" aria-hidden="true"></i> Voice Input
+                </button>
+                <button type="button" id="speak-btn" class="btn btn-warning">Read Input Text</button>
+                <div id="voice-feedback" style="display: none;">Listening...</div>
+            </div>
+            
+            
+            <div class="form-group">
+                <label for="translated_text">Translated Text:</label>
+                <textarea id="translated_text" name="translated_text" class="form-control" readonly></textarea>
+            </div>
+            <button type="button" id="play-translation-btn" class="btn btn-success">Play Translation</button>
+            <div class="form-group">
+                <label for="voice_select">Select Voice:</label>
+                <select id="voice_select" name="voice_id" class="form-control">
+                    {% for voice in voices %}
+                        <option value="{{ voice.id }}">{{ voice.name }} ({{ ', '.join(voice.languages) }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="voice_rate">Speech Rate:</label>
+                <input type="range" id="voice_rate" name="voice_rate" class="form-control" min="0.5" max="2" step="0.1" value="1">
+                <small class="form-text text-muted">Adjust the speech rate (default: 1)</small>
+            </div>
+            <div class="form-group">
+                <label for="voice_pitch">Pitch:</label>
+                <input type="range" id="voice_pitch" name="voice_pitch" class="form-control" min="0.5" max="2" step="0.1" value="1">
+                <small class="form-text text-muted">Adjust the pitch (default: 1)</small>
+            </div>
+            <button type="button" id="preview-voice-btn" class="btn btn-secondary">Preview Voice</button>
+            <div class="form-group">
+                <label for="context">Translation Context (Optional):</label>
+                <select id="context" name="context" class="form-control">
+                    <option value="">Default</option>
+                    <option value="formal">Formal</option>
+                    <option value="technical">Technical</option>
+                    <option value="casual">Casual</option>
+                    <!-- Add more context options as needed -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="real_time_toggle">Real-Time Translation:</label>
+                <input type="checkbox" id="real_time_toggle" checked>
+            </div>
+            <div class="form-group">
+                <label for="remember_settings">Remember My Preferences:</label>
+                <input type="checkbox" id="remember_settings">
+            </div>
+            <div class="form-group"></div>
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email"class="form-control" aria-required="true" aria-invalid="false" required>
+                <span id="emailError" class="error-message" role="alert" style="display:none;">Please enter a valid email address.</span>
+
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+
+                <button aria-label="Submit Form" class="btn btn-success" type="button">Submit</button>
+            </div>
+            
+        </form>
+        
+        <img id="loading-spinner" src="{{ url_for('static', filename='loading_spinner.gif') }}" style="display: none;">
+    </div>
+    
+    <script>
+        document.getElementById('email').addEventListener('input', function(e) {
+        const emailInput = e.target;
+        const errorMessage = document.getElementById('emailError');
+        if (emailInput.validity.valid) {
+            emailInput.setAttribute('aria-invalid', 'false');
+            errorMessage.style.display = 'none';
+        } else {
+            emailInput.setAttribute('aria-invalid', 'true');
+            errorMessage.style.display = 'block';
+        }
+    });
+
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Check if offline
+            if (!navigator.onLine) {
+                alert('You are offline. Some features may be limited.');
+            }
+
+            // Load user preferences if available
+            if (localStorage.getItem('remember_settings') === 'true') {
+                $('#remember_settings').prop('checked', true);
+                $('#src_lang').val(localStorage.getItem('src_lang'));
+                $('#dest_lang').val(localStorage.getItem('dest_lang'));
+                $('#real_time_toggle').prop('checked', localStorage.getItem('real_time_toggle') === 'true');
+                $('#context').val(localStorage.getItem('context'));
+            }
+
+            // Save preferences when checkbox is changed
+            $('#remember_settings').on('change', function() {
+                if ($(this).is(':checked')) {
+                    localStorage.setItem('remember_settings', 'true');
+                    localStorage.setItem('src_lang', $('#src_lang').val());
+                    localStorage.setItem('dest_lang', $('#dest_lang').val());
+                    localStorage.setItem('real_time_toggle', $('#real_time_toggle').is(':checked'));
+                    localStorage.setItem('context', $('#context').val());
+                } else {
+                    localStorage.clear();
+                }
+            });
+
+            // Handle real-time translation
+            function realTimeTranslate() {
+                var srcLang = $('#src_lang').val();
+                var destLang = $('#dest_lang').val();
+                var text = $('#input_text').val();
+                var context = $('#context').val();
+
+                $('#loading-spinner').show(); // Show the spinner
+
+                if (text.trim() !== '') {
+                    $.ajax({
+                        url: '/real_time_translate',
+                        type: 'POST',
+                        data: {
+                            'src_lang': srcLang,
+                            'dest_lang': destLang,
+                            'text': text,
+                            'context': context
+                        },
+                        success: function(response) {
+                            $('#translated_text').val(response.translated_text);
+                        },
+                        complete: function() {
+                            $('#loading-spinner').hide(); // Hide the spinner
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Translation error:', error);
+                        }
+                    });
+                } else {
+                    $('#loading-spinner').hide(); // Hide the spinner if the input is empty
+                }
+            }
+
+            $('#real_time_toggle').on('change', function() {
+                var isChecked = $(this).is(':checked');
+                if (isChecked) {
+                    $('#input_text').on('input', realTimeTranslate);
+                } else {
+                    $('#input_text').off('input', realTimeTranslate);
+                }
+            });
+
+            $('#input_text').on('input', realTimeTranslate); // Attach initially
+
+            // Handle speech synthesis (Speak button)
+            $(document).ready(function() {
+                $('#speak-btn').on('click', function() {
+                    var text = $('#input_text').val();
+                    var lang = $('#src_lang').val();
+                    var voiceId = $('#voice_select').val();
+                    var rate = $('#voice_rate').val();
+                    var pitch = $('#voice_pitch').val();
+
+                    if (text) {
+                        $.ajax({
+                            url: '/speak',
+                            type: 'POST',
+                            data: {
+                                'text': text,
+                                'lang': lang,
+                                'voice_id': voiceId,
+                                'rate': rate,
+                                'pitch': pitch
+                            },
+                            xhrFields: {
+                                responseType: 'blob'
+                            },
+                            success: function(blob) {
+                                var url = window.URL.createObjectURL(blob);
+                                var audio = new Audio(url);
+                                audio.play();
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Failed to Preview Voice!',
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+            // Handle speech synthesis for translated text (Play Translation button)
+            $('#play-translation-btn').on('click', function() {
+                var translatedText = $('#translated_text').val();
+                var lang = $('#dest_lang').val();
+
+                if (translatedText) {
+                    $.ajax({
+                        url: '/play_translation',
+                        type: 'POST',
+                        data: {
+                            'translated_text': translatedText,
+                            'lang': lang
+                        },
+                        xhrFields: {
+                            responseType: 'blob'
+                        },
+                        success: function(blob) {
+                            console.log('Received audio blob');
+                            var url = window.URL.createObjectURL(blob);
+                            var audio = new Audio(url);
+                            audio.play().then(() => {
+                                console.log('Audio is playing');
+                            }).catch(error => {
+                                console.error('Error playing audio:', error);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Failed to play translation:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Failed to Play Translation!',
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Translated Text',
+                        text: 'Please translate some text before playing.',
+                    });
+                }
+            });
+
+            
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#preview-voice-btn').on('click', function() {
+                var text = "This is a preview of the selected voice.";
+                var lang = $('#src_lang').val();
+                var voiceId = $('#voice_select').val();
+                var rate = $('#voice_rate').val();
+                var pitch = $('#voice_pitch').val();
+
+                if (text) {
+                    $.ajax({
+                        url: '/speak',
+                        type: 'POST',
+                        data: {
+                            'text': text,
+                            'lang': lang,
+                            'voice_id': voiceId,
+                            'rate': rate,
+                            'pitch': pitch
+                        },
+                        xhrFields: {
+                            responseType: 'blob'
+                        },
+                        success: function(blob) {
+                            var url = window.URL.createObjectURL(blob);
+                            var audio = new Audio(url);
+                            audio.play();
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Failed to Preview Voice!',
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function() {
+    var recognition;
+    var isRecognizing = false;
+    var accumulatedText = '';
+
+    // Function to start recognition
+    function startRecognition() {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        var srcLang = $('#src_lang').val() || 'en';
+
+        recognition.lang = srcLang === 'auto' ? 'en' : srcLang;
+        recognition.interimResults = false;
+        recognition.continuous = true;
+
+        recognition.onstart = function() {
+            console.log('Voice recognition started. Speak now...');
+            toggleRecognitionUI(true);
+            accumulatedText = ''; 
+        };
+
+        recognition.onspeechend = function() {
+            console.log('Speech ended.');
+        };
+
+        recognition.onresult = function(event) {
+            for (var i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    accumulatedText += event.results[i][0].transcript + ' ';
+                    $('#input_text').val(accumulatedText).trigger('input');
+                }
+            }
+        };
+
+        recognition.onerror = function(event) {
+            console.error('Voice recognition error:', event.error);
+            toggleRecognitionUI(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Recognition Error',
+                text: 'An error occurred during speech recognition. Please try again.',
+                footer: 'Error: ' + event.error
+            });
+        };
+
+        recognition.onend = function() {
+            console.log('Voice recognition ended.');
+            toggleRecognitionUI(false);
+        };
+
+        recognition.start();
+    }
+
+    // Function to stop recognition
+    function stopRecognition() {
+        if (recognition && isRecognizing) {
+            recognition.stop();
+            toggleRecognitionUI(false);
+        }
+    }
+
+    // Function to toggle UI based on recognition state
+    function toggleRecognitionUI(isActive) {
+        $('#voice-input-btn').toggleClass('active', isActive);
+        $('#voice-feedback').toggle(isActive);
+        isRecognizing = isActive;
+    }
+
+    // Toggle recognition on voice input button click
+    $('#voice-input-btn').on('click', function() {
+        if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Browser Not Supported',
+                text: 'Your browser does not support speech recognition.'
+            });
+            return;
+        }
+
+        if (isRecognizing) {
+            stopRecognition();
+        } else {
+            startRecognition();
+        }
+    });
+
+    // Stop recognition when any other button or input field is interacted with
+    $('button, input, select, textarea').not('#voice-input-btn').on('click input change', function() {
+        if (isRecognizing) {
+            stopRecognition();
+        }
+        // Additional logic for specific inputs can go here
+    });
+
+    // Additional individual button logic if needed
+    $('#speak-btn').on('click', function() {
+        // Logic for reading the input text
+    });
+
+    $('#play-translation-btn').on('click', function() {
+        // Logic for playing the translated text
+    });
+
+    $('#preview-voice-btn').on('click', function() {
+        // Logic for previewing the selected voice
+    });
+
+    $('#theme-toggle').on('click', function() {
+        // Logic for toggling dark mode
+    });
+
+    $('#translation-form button[type="button"]').on('click', function() {
+        // Logic for form submission
+    });
+});
+
+    </script>
+</body>
+</html>
